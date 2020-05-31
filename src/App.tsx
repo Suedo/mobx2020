@@ -1,9 +1,11 @@
 import * as React from 'react';
 
 import { BugsHeader } from './containers/BugsHeaderContainer';
-import { BugsList } from './components/BugsList';
-import { BugsForm } from './components/BugsForm';
-import { bugStore, StoreContext } from './stores/Store';
+import { BugsList } from './containers/BugsListContainer';
+import { BugsForm } from './containers/BugsForm';
+import { StoreProvider } from './context/context';
+
+import './App.css';
 
 interface IAppProps {
   name: string;
@@ -11,14 +13,14 @@ interface IAppProps {
 
 const App: React.FunctionComponent<IAppProps> = ({ name }) => {
   return (
-    <StoreContext.Provider value={bugStore}>
+    <StoreProvider>
       <div className="App">
         <header className="App-Header" />
         <BugsHeader />
         <BugsList />
         <BugsForm />
       </div>
-    </StoreContext.Provider>
+    </StoreProvider>
   );
 };
 

@@ -1,12 +1,10 @@
-import React from 'react';
-import { useStore, bugStore } from '../stores/Store';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { PureBugsHeader } from '../components/PureBugsHeader';
+import { StoreContext } from '../context/context';
 
 export const BugsHeader = observer(() => {
-  const { bugCount } = useStore((bugStore) => ({
-    bugCount: bugStore.bugCount,
-  }));
+  const bugstore = useContext(StoreContext);
 
-  return <PureBugsHeader count={bugCount} />;
+  return <PureBugsHeader count={bugstore.bugCount} />;
 });
