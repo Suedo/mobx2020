@@ -2,26 +2,26 @@ import React, { FunctionComponent } from 'react';
 import { Bug } from '../stores/BugStore';
 import { Observer } from 'mobx-react';
 
-interface BugsListItemProps {
+interface ListItemProps {
   id: string;
   name: string;
 }
 
-const BugsListItem: FunctionComponent<BugsListItemProps> = ({ id, name }) => {
+const ListItem: FunctionComponent<ListItemProps> = ({ id, name }) => {
   return <li key={id}>{name}</li>;
 };
 
-interface BugsListProps {
+interface ListProps {
   bugs: Bug[];
 }
 
-export const BugsListComponent: FunctionComponent<BugsListProps> = ({ bugs }) => {
+export const ListComponent: FunctionComponent<ListProps> = ({ bugs }) => {
   return (
     <Observer>
       {() => (
         <ul>
           {bugs.map((bug) => (
-            <BugsListItem id={bug.id} name={bug.name} />
+            <ListItem id={bug.id} name={bug.name} />
           ))}
         </ul>
       )}

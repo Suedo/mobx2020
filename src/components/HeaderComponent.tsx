@@ -1,13 +1,14 @@
 import React from 'react';
 
-interface PureBugsHeaderProps {
-  count: number;
+interface HeaderComponentProps {
+  count?: number;
+  displayLabel: string;
 }
 
-export const PureBugsHeader = ({ count }: PureBugsHeaderProps) => {
+export const HeaderComponent: React.FC<HeaderComponentProps> = ({ count, displayLabel }) => {
   return (
     <>
-      <h1>Number of bugs: {count}</h1>
+      <h1>{displayLabel}</h1>
       <ul className="tg-list">
         <li className="tg-list-item">
           <input type="checkbox" id="themeToggle" />

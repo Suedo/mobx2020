@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import { BugsHeader } from './containers/BugsHeaderContainer';
-import { BugsList } from './containers/BugsListContainer';
+import { AppHeader } from './containers/HeaderContainer';
+import { BugsList, ComplaintsList } from './containers/ItemListContainer';
 import { BugsForm } from './containers/BugsForm';
+import { ComplaintsForm } from './containers/ComplaintsForm';
 import { StoreProvider } from './context/context';
 
 import './App.css';
@@ -15,16 +16,17 @@ const App: React.FunctionComponent<IAppProps> = ({ name }) => {
   return (
     <StoreProvider>
       <div className="App">
-        <header className="App-Header" />
-        <BugsHeader />
-        <BugsList />
-        <BugsForm />
-      </div>
-      <div className="App">
-        <header className="App-Header" />
-        <BugsHeader />
-        <BugsList />
-        <BugsForm />
+        <AppHeader />
+        <div className="grid-container">
+          <div className="grid-item">
+            <BugsList />
+            <BugsForm />
+          </div>
+          <div className="grid-item">
+            <ComplaintsList />
+            <ComplaintsForm />
+          </div>
+        </div>
       </div>
     </StoreProvider>
   );
