@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useLocalStore } from 'mobx-react-lite';
-import { BugStore, BugStoreT } from '../stores/BugStore';
+import { RootStore, RootStoreT } from '../stores/RootStore';
 
-// https://blog.mselee.com/posts/2019/06/08/using-mobx-with-react-hooks-typescript/
-
-export const StoreContext = React.createContext<BugStoreT>({} as BugStoreT);
+export const StoreContext = React.createContext({} as RootStoreT);
 
 export const StoreProvider: React.FC = ({ children }) => {
-  const store = useLocalStore(BugStore);
+  const store = useLocalStore(RootStore);
 
   return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
+};
+
+// simplifies imports
+export const useStore = () => {
+  return useContext(StoreContext);
 };

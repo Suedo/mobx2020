@@ -20,6 +20,12 @@ const App: React.FunctionComponent<IAppProps> = ({ name }) => {
         <BugsList />
         <BugsForm />
       </div>
+      <div className="App">
+        <header className="App-Header" />
+        <BugsHeader />
+        <BugsList />
+        <BugsForm />
+      </div>
     </StoreProvider>
   );
 };

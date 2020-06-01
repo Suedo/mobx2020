@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Bug } from '../stores/BugStore';
-import { StoreContext } from '../context/context';
+import { useStore } from '../context/context';
 
 export const BugsForm = () => {
   const initialState = '';
   const [bugName, setBugName] = useState(initialState);
 
-  const bugstore = useContext(StoreContext);
+  const { bugStore } = useStore();
 
   const addBug = (name: string) => {
-    bugstore.addBug(name);
+    bugStore.addBug(name);
   };
 
   return (
