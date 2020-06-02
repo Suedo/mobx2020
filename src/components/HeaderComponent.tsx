@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
+import { ToggleComponent } from './ToggleComponent';
 
 interface HeaderComponentProps {
-  count?: number;
-  displayLabel: string;
+  brand: string;
 }
 
-export const HeaderComponent: React.FC<HeaderComponentProps> = ({ count, displayLabel }) => {
+export const HeaderComponent: FunctionComponent<HeaderComponentProps> = ({ brand }) => {
   return (
     <>
-      <h1>{displayLabel}</h1>
-      <ul className="tg-list">
-        <li className="tg-list-item">
-          <input type="checkbox" id="themeToggle" />
-          <label htmlFor="themeToggle"></label>
-        </li>
-      </ul>
+      <div className="header-grid-container">
+        <div className="header-grid-item">{brand}</div>
+        <div className="header-grid-item"></div>
+        <div className="header-grid-item">
+          <ToggleComponent />
+        </div>
+      </div>
     </>
   );
 };

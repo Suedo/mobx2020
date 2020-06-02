@@ -4,9 +4,7 @@ import { HeaderComponent } from '../components/HeaderComponent';
 import { useStore } from '../context/context';
 
 export const AppHeader = observer(() => {
-  const { bugStore, complaintStore } = useStore();
-
-  const display = `Number of Bugs: ${bugStore.bugCount}, Number of Complaints: ${complaintStore.complaintCount}`;
-
-  return <HeaderComponent displayLabel={display} />;
+  return <HeaderComponent brand="MobX2020" />;
 });
+
+// https://stackoverflow.com/a/60569430/2715083

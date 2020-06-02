@@ -14,10 +14,3 @@ export const RootStore = () => {
 };
 
 export type RootStoreT = ReturnType<typeof RootStore>;
-
-// not needed, handled in context.ts
-// export const StoreContext = createContext({} as RootStoreT);
-
-// export const useStore = () => {
-//   return useContext(StoreContext);
-// };
