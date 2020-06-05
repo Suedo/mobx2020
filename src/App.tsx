@@ -5,9 +5,10 @@ import { Banner } from './containers/BannerContainer';
 import { BugsList, ComplaintsList } from './containers/ItemListContainer';
 import { BugsForm } from './containers/BugsForm';
 import { ComplaintsForm } from './containers/ComplaintsForm';
-import { StoreProvider } from './context/context';
+import { StoreProvider, MuiThemeProvider } from './context/context';
 
 import './App.css';
+import Paper from '@material-ui/core/Paper';
 
 interface IAppProps {
   name: string;
@@ -16,22 +17,26 @@ interface IAppProps {
 const App: React.FunctionComponent<IAppProps> = ({ name }) => {
   return (
     <StoreProvider>
-      <div className="App">
-        <AppHeader />
-        <div className="grid-container">
-          <div className="grid-item banner">
-            <Banner />
+      <MuiThemeProvider>
+        <Paper style={{ height: '100vh' }}>
+          <div className="App">
+            <AppHeader />
+            <div className="grid-container">
+              <div className="grid-item banner">
+                <Banner />
+              </div>
+              <div className="grid-item">
+                <BugsList />
+                <BugsForm />
+              </div>
+              <div className="grid-item">
+                <ComplaintsList />
+                <ComplaintsForm />
+              </div>
+            </div>
           </div>
-          <div className="grid-item">
-            <BugsList />
-            <BugsForm />
-          </div>
-          <div className="grid-item">
-            <ComplaintsList />
-            <ComplaintsForm />
-          </div>
-        </div>
-      </div>
+        </Paper>
+      </MuiThemeProvider>
     </StoreProvider>
   );
 };
