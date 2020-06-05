@@ -23,7 +23,7 @@ export const ThemeStore = () => {
 
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
-      this.theme = darkTheme;
+      this.theme = this.isDarkMode ? darkTheme : lightTheme;
       console.log('Theme DarkMode:', this.theme.palette.type);
     },
   };
