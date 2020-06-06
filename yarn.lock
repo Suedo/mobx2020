@@ -4569,6 +4569,11 @@ filepond-plugin-file-encode@^2.1.5:
   resolved "https://registry.yarnpkg.com/filepond-plugin-file-encode/-/filepond-plugin-file-encode-2.1.5.tgz#9bf6c3b868a02eb19d4a6b277f63d7ed1d705e42"
   integrity sha512-zZE+CWjMV0GJHyy54541AjAV3tRThQgYt9IZWlnBFs8bZFFrKULQCoJ8pBwTXpt/Lwx0M55u0lMLu2otBJkc6g==
 
+filepond-plugin-file-validate-type@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-type/-/filepond-plugin-file-validate-type-1.2.5.tgz#b3588088d2b0d5dbdf706d068c0ecdf28140a8e3"
+  integrity sha512-SsdYD6N+PDnetrPrBHfl13ZC9jRv5BuGdai5cORfANhuE/N32OwU/IclCNQ4qlpIa88hzqBg9dj6IINkiW+4HA==
+
 filepond-plugin-image-exif-orientation@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/filepond-plugin-image-exif-orientation/-/filepond-plugin-image-exif-orientation-1.0.9.tgz#bf1220d99c117a69859f3297d0618e7469705019"

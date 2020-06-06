@@ -13,6 +13,7 @@
     "@types/react-dom": "^16.9.0",
     "filepond": "^4.15.1",
     "filepond-plugin-file-encode": "^2.1.5",
+    "filepond-plugin-file-validate-type": "^1.2.5",
     "filepond-plugin-image-exif-orientation": "^1.0.9",
     "filepond-plugin-image-preview": "^4.6.4",
     "mobx": "^5.15.4",

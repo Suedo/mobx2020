@@ -7,55 +7,61 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation filepond-plugin-file-encode --save`
+// `yarn add filepond-plugin-image-preview filepond-plugin-image-exif-orientation filepond-plugin-file-encode filepond-plugin-file-validate-type`
 // @ts-ignore
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 // @ts-ignore
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 // @ts-ignore
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
 // Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode);
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginFileEncode,
+  FilePondPluginFileValidateType,
+);
 
 interface ImgUploadComponentPropsI {
   label?: string;
 }
 
 export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = ({ label }) => {
-  const [files, setFiles] = useState([]);
+  const initialState: any[] = []; // to avoid state being set to 'never' type, https://stackoverflow.com/a/52423919/2715083
+  const [files, setFiles] = useState(initialState);
   const pondref = useRef();
 
+  // default value, obtained from flepond doc
+  const disp = label || 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>';
+
   // @ts-ignore
-  useEffect(() => pondref.current);
+  const filedAdded = (err, file) => {
+    if (err) {
+      console.log('error on adding file');
+    } else {
+      console.log('filedAdded :: base64 value:\n', file.getFileEncodeBase64String());
 
-  const updateFiles = (files: any) => {
-    const pond = pondref.current;
-    /*
-    needs a change in `/node_modules/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js`
-    line: 69
-
-    added:
-      item.extend('getFileEncodeBase64String', function() {
-        return base64Cache[item.id] ? base64Cache[item.id].data : base64Cache[item.id];
-      });
-
-    */
-    files.map((file: any) => console.log('base64 value:\n', file.getFileEncodeBase64String()));
+      // Use of the wrapper function is highly encouraged so that the current state is accessed
+      // when the re-render actually occurs, not at some other time.
+      // https://medium.com/javascript-in-plain-english/how-to-add-to-an-array-in-react-state-3d08ddb2e1dc
+      setFiles((files) => [...files, file]);
+    }
   };
 
   return (
-    <div className="App">
-      <FilePond
-        ref={pondref}
-        files={files}
-        allowMultiple={true}
-        onupdatefiles={updateFiles}
-        labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-      />
-      <pre>{JSON.stringify(files[0], null, 2)}</pre>
-    </div>
+    <FilePond
+      ref={pondref}
+      files={files}
+      allowMultiple={true}
+      onaddfile={filedAdded}
+      acceptedFileTypes={['image/png', 'image/jpeg']}
+      fileValidateTypeLabelExpectedTypesMap={{
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+      }}
+      labelIdle={disp}
+    />
   );
 };
