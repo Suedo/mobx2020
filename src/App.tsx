@@ -3,6 +3,7 @@ import * as React from 'react';
 import { AppHeader } from './containers/HeaderContainer';
 import { Banner } from './containers/BannerContainer';
 import { BugsList, ComplaintsList } from './containers/ItemListContainer';
+import { ImgUploader } from './containers/ImgUploadContainer';
 import { BugsForm } from './containers/BugsForm';
 import { ComplaintsForm } from './containers/ComplaintsForm';
 import { StoreProvider, MuiThemeProvider } from './context/context';
@@ -34,6 +35,7 @@ const App: React.FunctionComponent<IAppProps> = ({ name }) => {
                 <ComplaintsForm />
               </div>
             </div>
+            <ImgUploader />
           </div>
         </Paper>
       </MuiThemeProvider>
