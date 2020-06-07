@@ -1,7 +1,14 @@
 import React, { FunctionComponent, useState, useRef, KeyboardEvent } from 'react';
 
 import { Editor, EditorState, RichUtils, getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+
+// @ts-ignore
+import { stateToMarkdown } from 'draft-js-export-markdown';
 import './RichEditor.css';
+import { BlockStyleControls } from './BlockStyleControls';
+import { InlineStyleControls } from './InlineStyleControls';
+
+import { addLinkPluginPlugin } from './LinkAddPlugin';
 
 interface RichEditorPropsI {
   placeholder?: string;
@@ -17,6 +24,23 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
 
   const { handleKeyCommand, onTab, toggleBlockType, toggleInlineStyle } = RichUtils;
   const { hasCommandModifier } = KeyBindingUtil;
+
+  const addLink = () => {
+    const selection = editorState.getSelection();
+    const link = window.prompt('Paste the link -');
+    if (!link) {
+      onEditorChange(RichUtils.toggleLink(editorState, selection, null));
+      return 'handled';
+    }
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', {
+      url: link,
+    });
+    const newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    onEditorChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
+    return 'handled';
+  };
 
   // https://draftjs.org/docs/advanced-topics-key-bindings
   // state changes should be done in handle key part
@@ -39,6 +63,7 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
     }
     if (command === 'editor-save') {
       console.log('customHandleKeyCommand:: editor-save');
+      console.log(stateToMarkdown(editorState.getCurrentContent()));
       return 'handled';
     }
 
@@ -55,10 +80,14 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
     setEditorState((editorState) => newState);
   };
 
+  const onEditorChange = (newState: any) => {
+    setEditorState((editorState) => newState);
+  };
+
   return (
     <div className="RichEditor-root">
       <BlockStyleControls editorState={editorState} onToggle={customToggleBlockType} />
-      <InlineStyleControls editorState={editorState} onToggle={customToggleInlineStyle} />
+      <InlineStyleControls editorState={editorState} onToggle={customToggleInlineStyle} onAddLink={addLink} />
       {/* <div className={className} onClick={this.focus}> */}
       <div className={className}>
         <Editor
@@ -68,11 +97,12 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
           editorState={editorState}
           handleKeyCommand={customHandleKeyCommand}
           keyBindingFn={customKeyBindingFn}
-          onChange={(editorState) => setEditorState(editorState)}
+          onChange={onEditorChange}
           placeholder={placeholder}
           // TODO: make ref work
           // ref="editor"
           spellCheck={true}
+          plugins={[addLinkPluginPlugin]}
         />
       </div>
     </div>
@@ -95,93 +125,4 @@ const getBlockStyle = (block: any) => {
     default:
       return null;
   }
-};
-
-interface StyleButtonPropsI {
-  active?: boolean;
-  label?: string;
-  onToggle?: any;
-  className?: string;
-  style?: any;
-}
-
-export const StyleButton: FunctionComponent<StyleButtonPropsI> = ({ style, active, label, onToggle, className }) => {
-  const onToggleCustom = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    onToggle(style);
-  };
-  return (
-    <span className={className} onMouseDown={onToggleCustom}>
-      {label}
-    </span>
-  );
-};
-
-const BLOCK_TYPES = [
-  { label: 'H1', style: 'header-one' },
-  { label: 'H2', style: 'header-two' },
-  { label: 'H3', style: 'header-three' },
-  { label: 'H4', style: 'header-four' },
-  { label: 'H5', style: 'header-five' },
-  { label: 'H6', style: 'header-six' },
-  { label: 'Blockquote', style: 'blockquote' },
-  { label: 'UL', style: 'unordered-list-item' },
-  { label: 'OL', style: 'ordered-list-item' },
-  { label: 'Code Block', style: 'code-block' },
-];
-
-interface BlockStyleControlsPropsI {
-  editorState: any;
-  onToggle: any;
-}
-
-export const BlockStyleControls: FunctionComponent<BlockStyleControlsPropsI> = ({ editorState, onToggle }) => {
-  const selection = editorState.getSelection();
-  const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
-
-  return (
-    <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) => (
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-          className={'RichEditor-styleButton'}
-        />
-      ))}
-    </div>
-  );
-};
-
-var INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Monospace', style: 'CODE' },
-];
-
-interface InlineStyleControlsPropsI {
-  editorState: any;
-  onToggle: any;
-}
-
-export const InlineStyleControls: FunctionComponent<InlineStyleControlsPropsI> = ({ onToggle, editorState }) => {
-  const currentStyle = editorState.getCurrentInlineStyle();
-
-  return (
-    <div className="RichEditor-controls">
-      {INLINE_STYLES.map((type) => (
-        <StyleButton
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-          className={'RichEditor-styleButton'}
-        />
-      ))}
-    </div>
-  );
 };
