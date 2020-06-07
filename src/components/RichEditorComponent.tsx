@@ -148,6 +148,7 @@ export const BlockStyleControls: FunctionComponent<BlockStyleControlsPropsI> = (
           label={type.label}
           onToggle={onToggle}
           style={type.style}
+          className={'RichEditor-styleButton'}
         />
       ))}
     </div>
@@ -178,6 +179,7 @@ export const InlineStyleControls: FunctionComponent<InlineStyleControlsPropsI> =
           label={type.label}
           onToggle={onToggle}
           style={type.style}
+          className={'RichEditor-styleButton'}
         />
       ))}
     </div>
