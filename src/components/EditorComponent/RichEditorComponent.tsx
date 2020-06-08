@@ -9,6 +9,7 @@ import { BlockStyleControls } from './BlockStyleControls';
 import { InlineStyleControls } from './InlineStyleControls';
 
 import { addLinkPluginPlugin } from './LinkAddPlugin';
+import { StyleButton } from './StyleButton';
 
 interface RichEditorPropsI {
   placeholder?: string;
@@ -93,7 +94,8 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
   return (
     <div className="RichEditor-root">
       <BlockStyleControls editorState={editorState} onToggle={customToggleBlockType} />
-      <InlineStyleControls editorState={editorState} onToggle={customToggleInlineStyle} onAddLink={addLink} />
+      <InlineStyleControls editorState={editorState} onToggle={customToggleInlineStyle} />
+      <StyleButton key="Link" label="Link" onToggle={addLink} style="LINK" className={'RichEditor-styleButton'} />
       {/* <div className={className} onClick={this.focus}> */}
       <div className={className}>
         <Editor

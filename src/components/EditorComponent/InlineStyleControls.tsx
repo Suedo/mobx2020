@@ -6,20 +6,14 @@ var INLINE_STYLES = [
   { label: 'Italic', style: 'ITALIC' },
   { label: 'Underline', style: 'UNDERLINE' },
   { label: 'Monospace', style: 'CODE' },
-  { label: 'Link', style: 'LINK' },
 ];
 
 interface InlineStyleControlsPropsI {
   editorState: any;
   onToggle: any;
-  onAddLink: () => void;
 }
 
-export const InlineStyleControls: FunctionComponent<InlineStyleControlsPropsI> = ({
-  onToggle,
-  editorState,
-  onAddLink,
-}) => {
+export const InlineStyleControls: FunctionComponent<InlineStyleControlsPropsI> = ({ onToggle, editorState }) => {
   const currentStyle = editorState.getCurrentInlineStyle();
 
   return (
@@ -32,7 +26,6 @@ export const InlineStyleControls: FunctionComponent<InlineStyleControlsPropsI> =
           onToggle={onToggle}
           style={type.style}
           className={'RichEditor-styleButton'}
-          onAddLink={onAddLink}
         />
       ))}
     </div>

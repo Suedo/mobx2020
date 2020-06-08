@@ -7,23 +7,22 @@ interface StyleButtonPropsI {
   label?: string;
   onToggle?: any;
   className?: string;
-  style?: any;
-  onAddLink?: () => void;
+  style?: string;
 }
 
-export const StyleButton: FunctionComponent<StyleButtonPropsI> = ({ style, onAddLink, label, onToggle, className }) => {
+export const StyleButton: FunctionComponent<StyleButtonPropsI> = ({ style, label, onToggle, className }) => {
   const onToggleCustom = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onToggle(style);
   };
   return (
     <span className={className} onMouseDown={onToggleCustom}>
-      {getIconIfValid(label, onAddLink)}
+      <IconButton>{getIconIfValid(label)}</IconButton>
     </span>
   );
 };
 
-const getIconIfValid = (label: any, onAddLink: any) => {
+const getIconIfValid = (label: any) => {
   switch (label) {
     case 'Bold':
       return <FormatBold />;
@@ -34,11 +33,7 @@ const getIconIfValid = (label: any, onAddLink: any) => {
     case 'Monospace':
       return <CodeSharp />;
     case 'Link':
-      return (
-        <IconButton onClick={onAddLink}>
-          <LinkSharp />
-        </IconButton>
-      );
+      return <LinkSharp />;
     default:
       return label;
   }
