@@ -1,14 +1,21 @@
 import React, { FunctionComponent, useState, useRef, KeyboardEvent } from 'react';
 
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding, KeyBindingUtil, Modifier } from 'draft-js';
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  getDefaultKeyBinding,
+  KeyBindingUtil,
+  Modifier,
+  CompositeDecorator,
+  ContentState,
+} from 'draft-js';
 
 // @ts-ignore
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import './RichEditor.css';
 import { BlockStyleControls } from './BlockStyleControls';
 import { InlineStyleControls } from './InlineStyleControls';
-
-import { addLinkPluginPlugin } from './LinkAddPlugin';
 import { StyleButton } from './StyleButton';
 
 interface RichEditorPropsI {
@@ -16,7 +23,16 @@ interface RichEditorPropsI {
 }
 
 export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder }) => {
-  const initialEditorState = EditorState.createEmpty();
+  const decorator = new CompositeDecorator([
+    {
+      strategy: findLinkEntities,
+      component: Link,
+    },
+  ]);
+
+  const initialEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
+
+  const initialEditorState = EditorState.createWithContent(initialEditorContentState, decorator);
   const [editorState, setEditorState] = useState(initialEditorState);
 
   const editorRef = useRef();
@@ -110,7 +126,6 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
           // TODO: make ref work
           // ref="editor"
           spellCheck={true}
-          plugins={[addLinkPluginPlugin]}
         />
       </div>
     </div>
@@ -133,4 +148,18 @@ const getBlockStyle = (block: any) => {
     default:
       return null;
   }
+};
+
+// https://stackoverflow.com/a/47509999/2715083
+// @ts-ignore
+function findLinkEntities(contentBlock, callback, contentState) {
+  contentBlock.findEntityRanges((character: any) => {
+    const entityKey = character.getEntity();
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+  }, callback);
+}
+
+const Link = (props: any) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return <a href={url}>{props.children}</a>;
 };
