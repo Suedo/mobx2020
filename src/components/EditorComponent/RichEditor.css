@@ -43,11 +43,19 @@
   padding: 20px;
 }
 
+/* .public-DraftStyleDefault-ul is set by draftjs by default */
+.RichEditor-editor .public-DraftStyleDefault-ul li {
+  list-style-type: disc;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-ol li {
+  list-style-type: decimal;
+}
 .RichEditor-controls {
   font-family: 'Helvetica', sans-serif;
   font-size: 14px;
-  margin-bottom: 5px;
   user-select: none;
+  display: inline;
 }
 
 .RichEditor-styleButton {
