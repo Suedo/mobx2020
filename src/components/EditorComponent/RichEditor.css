@@ -67,7 +67,8 @@
 }
 
 .RichEditor-activeButton {
-  color: #5890ff;
+  background-color: #99bbff;
+  border-radius: 20%;
 }
 
 /* for links in editor */

@@ -74,23 +74,50 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
       setEditorState(newEditorState);
       return 'editor-tab';
     }
-    if (e.keyCode === 83 /* `S` key */ && hasCommandModifier(e)) {
+    // Key keycode of each key: https://keycode.info/
+    else if (e.keyCode === 83 /* `S` key */ && hasCommandModifier(e)) {
       return 'editor-save';
+    } else if (e.keyCode === 66 /* `B` key */ && hasCommandModifier(e)) {
+      return 'editor-toggle-bold';
+    } else if (e.keyCode === 73 /* `I` key */ && hasCommandModifier(e)) {
+      return 'editor-toggle-italic';
+    } else if (e.keyCode === 85 /* `U` key */ && hasCommandModifier(e)) {
+      return 'editor-toggle-underline';
+    } else if (e.keyCode === 75 /* `k` key */ && hasCommandModifier(e)) {
+      return 'editor-toggle-link';
     }
     return getDefaultKeyBinding(e);
   };
 
   const customHandleKeyCommand = (command: any, editorState: any) => {
-    if (command === 'editor-tab') {
-      return 'handled';
-    }
-    if (command === 'editor-save') {
-      console.log('customHandleKeyCommand:: editor-save');
-      console.log(stateToMarkdown(editorState.getCurrentContent()));
-      return 'handled';
-    }
+    switch (command) {
+      case 'editor-tab':
+        return 'handled';
 
-    return 'not-handled';
+      case 'editor-save':
+        console.log('customHandleKeyCommand:: editor-save');
+        console.log(stateToMarkdown(editorState.getCurrentContent()));
+        return 'handled';
+
+      case 'editor-toggle-bold':
+        customToggleInlineStyle('BOLD');
+        return 'handled';
+
+      case 'editor-toggle-italic':
+        customToggleInlineStyle('ITALIC');
+        return 'handled';
+
+      case 'editor-toggle-underline':
+        customToggleInlineStyle('UNDERLINE');
+        return 'handled';
+
+      case 'editor-toggle-link':
+        addLink();
+        return 'handled';
+
+      default:
+        return 'not-handled';
+    }
   };
 
   const customToggleBlockType = (blockType: any) => {

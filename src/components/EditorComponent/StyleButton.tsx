@@ -11,6 +11,7 @@ import {
   DeveloperMode,
 } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 interface StyleButtonPropsI {
   active?: boolean;
@@ -20,14 +21,24 @@ interface StyleButtonPropsI {
   style?: string;
 }
 
-export const StyleButton: FunctionComponent<StyleButtonPropsI> = ({ style, label, onToggle, className }) => {
+export const StyleButton: FunctionComponent<StyleButtonPropsI> = ({ style, active, label, onToggle, className }) => {
   const onToggleCustom = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onToggle(style);
   };
+
+  let toolTipText = label || '';
+  if (label === 'UL') toolTipText = 'Bulleted List';
+  else if (label === 'OL') toolTipText = 'Numbered List';
+  else if (label === 'Monospace') toolTipText = 'Inline Code';
+
+  const activeclass = `${active ? ' RichEditor-activeButton' : ''}`;
+  const classNames = className + activeclass;
   return (
-    <span className={className} onMouseDown={onToggleCustom}>
-      <IconButton>{getIconIfValid(label)}</IconButton>
+    <span className={classNames} onMouseDown={onToggleCustom}>
+      <Tooltip title={toolTipText}>
+        <IconButton>{getIconIfValid(label)}</IconButton>
+      </Tooltip>
     </span>
   );
 };
