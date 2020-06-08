@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useRef, KeyboardEvent } from 'react';
 
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+import { Editor, EditorState, RichUtils, getDefaultKeyBinding, KeyBindingUtil, Modifier } from 'draft-js';
 
 // @ts-ignore
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -26,20 +26,26 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
   const { hasCommandModifier } = KeyBindingUtil;
 
   const addLink = () => {
-    const selection = editorState.getSelection();
-    const link = window.prompt('Paste the link -');
+    console.log('in addlink');
+    const selectionState = editorState.getSelection();
+    const link = window.prompt('Paste your link: ');
     if (!link) {
-      onEditorChange(RichUtils.toggleLink(editorState, selection, null));
-      return 'handled';
+      // onEditorChange(RichUtils.toggleLink(editorState, selectionState, null));
+      return;
     }
-    const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
       url: link,
     });
-    const newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
-    const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    onEditorChange(RichUtils.toggleLink(newEditorState, selection, entityKey));
-    return 'handled';
+
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const contentStateWithLink = Modifier.applyEntity(contentStateWithEntity, selectionState, entityKey);
+    const newEditorState = EditorState.set(editorState, {
+      currentContent: contentStateWithLink,
+    });
+
+    onEditorChange(RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey));
+    return;
   };
 
   // https://draftjs.org/docs/advanced-topics-key-bindings
