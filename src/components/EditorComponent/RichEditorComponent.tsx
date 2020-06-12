@@ -9,6 +9,9 @@ import {
   Modifier,
   CompositeDecorator,
   ContentState,
+  RawDraftContentState,
+  convertFromRaw,
+  convertToRaw,
 } from 'draft-js';
 
 // @ts-ignore
@@ -20,9 +23,11 @@ import { StyleButton } from './StyleButton';
 
 interface RichEditorPropsI {
   placeholder?: string;
+  savedState?: string;
+  onSave: any;
 }
 
-export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder }) => {
+export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder, savedState = '', onSave }) => {
   const decorator = new CompositeDecorator([
     {
       strategy: findLinkEntities,
@@ -30,9 +35,20 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
     },
   ]);
 
-  const initialEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
+  let initialEditorState: EditorState;
+  let newPlaceholder: string;
 
-  const initialEditorState = EditorState.createWithContent(initialEditorContentState, decorator);
+  if (savedState.length > 0) {
+    const deSerializedDraftState = JSON.parse(savedState) as RawDraftContentState;
+    const savedContentState = convertFromRaw(deSerializedDraftState);
+    initialEditorState = EditorState.createWithContent(savedContentState, decorator);
+    newPlaceholder = '';
+  } else {
+    const initialBlankEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
+    initialEditorState = EditorState.createWithContent(initialBlankEditorContentState, decorator);
+    newPlaceholder = placeholder || '';
+  }
+
   const [editorState, setEditorState] = useState(initialEditorState);
 
   const editorRef = useRef();
@@ -97,6 +113,7 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
       case 'editor-save':
         console.log('customHandleKeyCommand:: editor-save');
         console.log(stateToMarkdown(editorState.getCurrentContent()));
+        onSave(convertToRaw(editorState));
         return 'handled';
 
       case 'editor-toggle-bold':
@@ -149,7 +166,7 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder })
           handleKeyCommand={customHandleKeyCommand}
           keyBindingFn={customKeyBindingFn}
           onChange={onEditorChange}
-          placeholder={placeholder}
+          placeholder={newPlaceholder}
           // TODO: make ref work
           // ref="editor"
           spellCheck={true}
