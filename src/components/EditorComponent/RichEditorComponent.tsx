@@ -24,34 +24,18 @@ import { StyleButton } from './StyleButton';
 interface RichEditorPropsI {
   placeholder?: string;
   savedState?: string;
-  onSave: any;
+  onSave?: any;
+  readOnly?: boolean;
 }
 
-export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder, savedState = '', onSave }) => {
-  const decorator = new CompositeDecorator([
-    {
-      strategy: findLinkEntities,
-      component: Link,
-    },
-  ]);
-
-  let initialEditorState: EditorState;
-  let newPlaceholder: string;
-
-  if (savedState.length > 0) {
-    const deSerializedDraftState = JSON.parse(savedState) as RawDraftContentState;
-    const savedContentState = convertFromRaw(deSerializedDraftState);
-    initialEditorState = EditorState.createWithContent(savedContentState, decorator);
-    newPlaceholder = '';
-  } else {
-    const initialBlankEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
-    initialEditorState = EditorState.createWithContent(initialBlankEditorContentState, decorator);
-    newPlaceholder = placeholder || '';
-  }
-
-  const [editorState, setEditorState] = useState(initialEditorState);
-
-  const editorRef = useRef();
+export const RichEditor: FunctionComponent<RichEditorPropsI> = ({
+  placeholder,
+  savedState = '',
+  onSave,
+  readOnly = false,
+}) => {
+  const [editorState, setEditorState] = useState(initializeState(savedState));
+  if (readOnly) console.log('read only editor', stateToMarkdown(editorState.getCurrentContent()));
 
   let className = 'RichEditor-editor';
 
@@ -113,7 +97,7 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder, s
       case 'editor-save':
         console.log('customHandleKeyCommand:: editor-save');
         console.log(stateToMarkdown(editorState.getCurrentContent()));
-        onSave(convertToRaw(editorState));
+        onSave(JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2));
         return 'handled';
 
       case 'editor-toggle-bold':
@@ -166,7 +150,8 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({ placeholder, s
           handleKeyCommand={customHandleKeyCommand}
           keyBindingFn={customKeyBindingFn}
           onChange={onEditorChange}
-          placeholder={newPlaceholder}
+          placeholder={placeholder}
+          readOnly={readOnly}
           // TODO: make ref work
           // ref="editor"
           spellCheck={true}
@@ -206,4 +191,27 @@ function findLinkEntities(contentBlock, callback, contentState) {
 const Link = (props: any) => {
   const { url } = props.contentState.getEntity(props.entityKey).getData();
   return <a href={url}>{props.children}</a>;
+};
+
+const initializeState = (savedState: string) => {
+  const decorator = new CompositeDecorator([
+    {
+      strategy: findLinkEntities,
+      component: Link,
+    },
+  ]);
+
+  let initialEditorState;
+  if (savedState.length > 0) {
+    console.log('RichEditorComp: ', savedState);
+    const deSerializedDraftState = JSON.parse(savedState) as RawDraftContentState;
+    const savedContentState = convertFromRaw(deSerializedDraftState);
+    initialEditorState = EditorState.createWithContent(savedContentState, decorator);
+    console.log('RichEditorComp init:', stateToMarkdown(initialEditorState.getCurrentContent()));
+  } else {
+    const initialBlankEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
+    initialEditorState = EditorState.createWithContent(initialBlankEditorContentState, decorator);
+  }
+
+  return initialEditorState;
 };

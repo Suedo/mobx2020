@@ -1,19 +1,20 @@
 import { observable } from 'mobx';
 
-export class EditorStateRaw {
-  @observable rawString: string;
+// export class EditorStateRaw {
+//   @observable rawString: string;
 
-  constructor(rawString: string) {
-    this.rawString = rawString;
-  }
-}
+//   constructor(rawString: string) {
+//     this.rawString = rawString;
+//   }
+// }
 
 export const EditorStateStore = () => {
   return {
-    editorStateRaw: new EditorStateRaw(''),
+    value: '',
 
-    set newEditorStateRaw(value: string) {
-      this.editorStateRaw = new EditorStateRaw(value);
+    newEditorState(value: string) {
+      this.value = value;
+      console.log('new editor value:', this.value);
     },
   };
 };
