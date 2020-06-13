@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { RichEditor } from '../components/EditorComponent/RichEditorComponent';
+import { ViewPostComponent } from '../components/EditorComponent/ViewPostComponent';
 import { useStore } from '../context/context';
 
 export const Editor = observer(() => {
@@ -17,9 +18,7 @@ export const Editor = observer(() => {
         savedState={editorStateStore.value}
         onSave={(value: string) => handleSave(value)}
       ></RichEditor>
-      {editorStateStore.value.length > 0 && (
-        <RichEditor savedState={editorStateStore.value} readOnly={true}></RichEditor>
-      )}
+      {editorStateStore.value.length > 0 && <ViewPostComponent savedState={editorStateStore.value}></ViewPostComponent>}
     </>
   );
 });
