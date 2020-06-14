@@ -26,41 +26,20 @@ registerPlugin(
 
 interface ImgUploadComponentPropsI {
   label?: string;
+  onUpdateFiles: (files: any) => void;
+  files: any[];
 }
 
-export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = ({ label }) => {
-  const initialState: any[] = []; // to avoid state being set to 'never' type, https://stackoverflow.com/a/52423919/2715083
-  const [files, setFiles] = useState(initialState);
+export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = ({ label, files, onUpdateFiles }) => {
   const pondref = useRef();
 
   // default value, obtained from flepond doc
   const disp = label || 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>';
 
-  // @ts-ignore
-  const filedAdded = (err, file) => {
-    if (err) console.log('error on adding file');
-    else {
-      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-      const fileDataUrl: string = file.getFileEncodeDataURL(); // cannot read 'data' of undefined: https://github.com/pqina/filepond-plugin-file-encode/issues/13
-      const extractionRegex = /^data:image\/(\w+);base64,(.+)$/;
-      const groups = fileDataUrl.match(extractionRegex);
-      console.log('file type: ', groups && groups[1]);
-
-      // Use of the wrapper function is highly encouraged so that the current state is accessed
-      // when the re-render actually occurs, not at some other time.
-      // https://medium.com/javascript-in-plain-english/how-to-add-to-an-array-in-react-state-3d08ddb2e1dc
-      setFiles((files) => [...files, file]);
-    }
-  };
-
-  const fileRemoved = (err: any, file: any) => {
-    if (err) {
-      console.log('error removing file');
-    } else {
-      console.log('file to remove', file.filename);
-      const newFiles = files.filter((f) => f.filename !== file.filename);
-      setFiles((files) => newFiles);
-    }
+  // PR merged, issue fixed : https://github.com/pqina/filepond-plugin-file-encode/pull/12
+  // switching back to `onupdatefiles` , as it handles both add and remove conditions
+  const filesUpdated = (newFiles: any) => {
+    onUpdateFiles(newFiles);
   };
 
   return (
@@ -68,9 +47,8 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
       ref={pondref}
       files={files}
       allowMultiple={true}
-      onaddfile={filedAdded}
+      onupdatefiles={filesUpdated}
       maxParallelUploads={1}
-      onremovefile={fileRemoved}
       acceptedFileTypes={['image/png', 'image/jpeg']}
       fileValidateTypeLabelExpectedTypesMap={{
         'image/jpeg': '.jpg',
