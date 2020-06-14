@@ -38,15 +38,28 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
 
   // @ts-ignore
   const filedAdded = (err, file) => {
-    if (err) {
-      console.log('error on adding file');
-    } else {
-      console.log('filedAdded :: base64 value:\n', file.getFileEncodeBase64String());
+    if (err) console.log('error on adding file');
+    else {
+      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+      const fileDataUrl: string = file.getFileEncodeDataURL(); // cannot read 'data' of undefined: https://github.com/pqina/filepond-plugin-file-encode/issues/13
+      const extractionRegex = /^data:image\/(\w+);base64,(.+)$/;
+      const groups = fileDataUrl.match(extractionRegex);
+      console.log('file type: ', groups && groups[1]);
 
       // Use of the wrapper function is highly encouraged so that the current state is accessed
       // when the re-render actually occurs, not at some other time.
       // https://medium.com/javascript-in-plain-english/how-to-add-to-an-array-in-react-state-3d08ddb2e1dc
       setFiles((files) => [...files, file]);
+    }
+  };
+
+  const fileRemoved = (err: any, file: any) => {
+    if (err) {
+      console.log('error removing file');
+    } else {
+      console.log('file to remove', file.filename);
+      const newFiles = files.filter((f) => f.filename !== file.filename);
+      setFiles((files) => newFiles);
     }
   };
 
@@ -56,6 +69,8 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
       files={files}
       allowMultiple={true}
       onaddfile={filedAdded}
+      maxParallelUploads={1}
+      onremovefile={fileRemoved}
       acceptedFileTypes={['image/png', 'image/jpeg']}
       fileValidateTypeLabelExpectedTypesMap={{
         'image/jpeg': '.jpg',
