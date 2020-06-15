@@ -25,16 +25,3 @@ export const ImagesStore = () => {
     },
   };
 };
-
-// image is the filepond file-encoded image
-export const getDataFromImage = (image: any) => {
-  const fileDataUrl: string = image.getFileEncodeDataURL(); // fails here
-  const extractionRegex = /^data:image\/(\w+);base64,(.+)$/;
-  const groups = fileDataUrl.match(extractionRegex);
-  const newImage: UploadImage = {
-    fileName: image.filename,
-    fileType: (groups && groups[1]) || '',
-    base64: (groups && groups[2]) || '',
-  };
-  return newImage;
-};
