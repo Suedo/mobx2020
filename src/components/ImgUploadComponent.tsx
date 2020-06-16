@@ -42,6 +42,10 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
     onUpdateFiles(newFiles);
   };
 
+  const allDone = () => {
+    console.log('all done');
+  };
+
   return (
     <FilePond
       ref={pondref}
@@ -50,6 +54,7 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
       onupdatefiles={filesUpdated}
       maxParallelUploads={1}
       acceptedFileTypes={['image/png', 'image/jpeg']}
+      onprocessfiles={allDone}
       fileValidateTypeLabelExpectedTypesMap={{
         'image/jpeg': '.jpg',
         'image/png': '.png',

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+
 import { ImgUploadComponent } from '../components/ImgUploadComponent';
 import { UploadImage } from '../stores/ImagesStore';
 import { useStore } from '../context/context';
@@ -6,23 +8,44 @@ import { useStore } from '../context/context';
 export const ImgUploader = () => {
   const initialState: any[] = []; // to avoid state being set to 'never' type, https://stackoverflow.com/a/52423919/2715083
   const [images, setImages] = useState(initialState);
+  const [uploading, setUploading] = useState(false);
 
   const { imagesStore } = useStore();
 
   const updateFiles = (updatedImagesFromChild: any[]) => {
     setImages((images) => updatedImagesFromChild);
-    // commenting out untill https://github.com/pqina/filepond-plugin-file-encode/issues/13 gets resolved
-    // or a different flow comes to mind
-    // const updatedImages: UploadImage[] = updatedImagesFromChild.map(getDataFromImage);
-    // imagesStore.updateImages(updatedImages);
+  };
+
+  useEffect(() => {
+    // https://pqina.nl/filepond/docs/patterns/api/filepond-object/#filestatus-enum
+    // https://github.com/pqina/filepond/issues/263#issuecomment-472621154
+    const status = images.some((i) => i.status != 5); // Filepond.Filestatus of 2 == idle
+    console.log('checking upload status', images.map((i) => i.status).join(','));
+    setUploading((uploading) => status);
+  }, [images]);
+
+  const updateImageStore = () => {
+    console.log('updateImageStore:: updating store with image metadata');
+    const updatedImages: UploadImage[] = images.map(getDataFromImage);
+    imagesStore.updateImages(updatedImages);
+    console.log(
+      JSON.stringify(
+        imagesStore.images.map((i) => i.fileName),
+        null,
+        2,
+      ),
+    );
   };
 
   return (
-    <ImgUploadComponent
-      onUpdateFiles={updateFiles}
-      files={images}
-      label="Drag & Drop images here, or click to open file browser!"
-    ></ImgUploadComponent>
+    <div>
+      <ConfirmUpload confirmUpload={updateImageStore} imageUploading={uploading}></ConfirmUpload>
+      <ImgUploadComponent
+        onUpdateFiles={updateFiles}
+        files={images}
+        label="Drag & Drop images here, or click to open file browser!"
+      ></ImgUploadComponent>
+    </div>
   );
 };
 
@@ -37,4 +60,19 @@ export const getDataFromImage = (image: any) => {
     base64: (groups && groups[2]) || '',
   };
   return newImage;
+};
+
+interface ConfirmUploadPropsI {
+  confirmUpload: () => void;
+  imageUploading: boolean;
+}
+
+export const ConfirmUpload: FunctionComponent<ConfirmUploadPropsI> = ({ confirmUpload, imageUploading }) => {
+  return (
+    <>
+      <Button disabled={imageUploading} variant="contained" color="primary" onClick={confirmUpload} disableElevation>
+        Confirm Upload
+      </Button>
+    </>
+  );
 };
