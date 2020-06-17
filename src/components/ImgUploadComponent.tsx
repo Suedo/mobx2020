@@ -52,7 +52,6 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
       files={files}
       allowMultiple={true}
       onupdatefiles={filesUpdated}
-      maxParallelUploads={1}
       acceptedFileTypes={['image/png', 'image/jpeg']}
       onprocessfiles={allDone}
       fileValidateTypeLabelExpectedTypesMap={{

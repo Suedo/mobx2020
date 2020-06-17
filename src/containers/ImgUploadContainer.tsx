@@ -16,12 +16,24 @@ export const ImgUploader = () => {
     setImages((images) => updatedImagesFromChild);
   };
 
+  /* 
+  This way doesnt work. filestatus is always 2. Also, the `onprocessfiles` callback fires only when using `server` config
   useEffect(() => {
     // https://pqina.nl/filepond/docs/patterns/api/filepond-object/#filestatus-enum
     // https://github.com/pqina/filepond/issues/263#issuecomment-472621154
-    const status = images.some((i) => i.status != 5); // Filepond.Filestatus of 2 == idle
+    const status = images.some((i) => i.status != 2); // Filepond.Filestatus of 2 == idle
     console.log('checking upload status', images.map((i) => i.status).join(','));
     setUploading((uploading) => status);
+  }, [images]);
+  */
+
+  useEffect(() => {
+    setUploading((uploading) => true);
+    const timer = setTimeout(() => {
+      // enable the upload button some time after the last upload triggered
+      setUploading((uploading) => false);
+    }, 1200);
+    return () => clearTimeout(timer);
   }, [images]);
 
   const updateImageStore = () => {
