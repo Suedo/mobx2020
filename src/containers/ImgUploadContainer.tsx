@@ -53,7 +53,7 @@ export const ImgUploader = () => {
     <div>
       <ConfirmUpload confirmUpload={updateImageStore} imageUploading={uploading}></ConfirmUpload>
       <ImgUploadComponent
-        onUpdateFiles={updateFiles}
+        imagesUpdated={updateFiles}
         files={images}
         label="Drag & Drop images here, or click to open file browser!"
       ></ImgUploadComponent>

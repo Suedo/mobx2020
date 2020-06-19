@@ -1,18 +1,6 @@
 import React, { FunctionComponent, useState, useRef, KeyboardEvent } from 'react';
 
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  getDefaultKeyBinding,
-  KeyBindingUtil,
-  Modifier,
-  CompositeDecorator,
-  ContentState,
-  RawDraftContentState,
-  convertFromRaw,
-  convertToRaw,
-} from 'draft-js';
+import { Editor, EditorState, RichUtils, getDefaultKeyBinding, KeyBindingUtil, Modifier, convertToRaw } from 'draft-js';
 
 // @ts-ignore
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -21,25 +9,28 @@ import { BlockStyleControls } from './BlockStyleControls';
 import { InlineStyleControls } from './InlineStyleControls';
 import { StyleButton } from './StyleButton';
 
+/**
+ * The idea is we will pass editor state, and it's setter, from container.
+ */
 interface RichEditorPropsI {
   placeholder?: string;
-  savedState?: string;
   onSave?: any;
   readOnly?: boolean;
+  editorState: EditorState;
+  setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
 }
 
 export const RichEditor: FunctionComponent<RichEditorPropsI> = ({
   placeholder,
-  savedState = '',
-  onSave,
   readOnly = false,
+  editorState,
+  setEditorState,
 }) => {
-  const [editorState, setEditorState] = useState(initializeState(savedState));
   if (readOnly) console.log('read only editor', stateToMarkdown(editorState.getCurrentContent()));
 
   let className = 'RichEditor-editor';
 
-  const { handleKeyCommand, onTab, toggleBlockType, toggleInlineStyle } = RichUtils;
+  const { onTab, toggleBlockType, toggleInlineStyle } = RichUtils;
   const { hasCommandModifier } = KeyBindingUtil;
 
   const addLink = () => {
@@ -47,7 +38,6 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({
     const selectionState = editorState.getSelection();
     const link = window.prompt('Paste your link: ');
     if (!link) {
-      // onEditorChange(RichUtils.toggleLink(editorState, selectionState, null));
       return;
     }
     const contentState = editorState.getCurrentContent();
@@ -97,7 +87,7 @@ export const RichEditor: FunctionComponent<RichEditorPropsI> = ({
       case 'editor-save':
         console.log('customHandleKeyCommand:: editor-save');
         console.log(stateToMarkdown(editorState.getCurrentContent()));
-        onSave(JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2));
+        // onSave(JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2));
         return 'handled';
 
       case 'editor-toggle-bold':
@@ -177,41 +167,4 @@ const getBlockStyle = (block: any) => {
     default:
       return null;
   }
-};
-
-// https://stackoverflow.com/a/47509999/2715083
-// @ts-ignore
-function findLinkEntities(contentBlock, callback, contentState) {
-  contentBlock.findEntityRanges((character: any) => {
-    const entityKey = character.getEntity();
-    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
-  }, callback);
-}
-
-const Link = (props: any) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-  return <a href={url}>{props.children}</a>;
-};
-
-const initializeState = (savedState: string) => {
-  const decorator = new CompositeDecorator([
-    {
-      strategy: findLinkEntities,
-      component: Link,
-    },
-  ]);
-
-  let initialEditorState;
-  if (savedState.length > 0) {
-    console.log('RichEditorComp: ', savedState);
-    const deSerializedDraftState = JSON.parse(savedState) as RawDraftContentState;
-    const savedContentState = convertFromRaw(deSerializedDraftState);
-    initialEditorState = EditorState.createWithContent(savedContentState, decorator);
-    console.log('RichEditorComp init:', stateToMarkdown(initialEditorState.getCurrentContent()));
-  } else {
-    const initialBlankEditorContentState: ContentState = EditorState.createEmpty().getCurrentContent();
-    initialEditorState = EditorState.createWithContent(initialBlankEditorContentState, decorator);
-  }
-
-  return initialEditorState;
 };

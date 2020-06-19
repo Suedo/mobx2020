@@ -3,6 +3,7 @@ import * as React from 'react';
 import { AppHeader } from './containers/HeaderContainer';
 import { ImgUploader } from './containers/ImgUploadContainer';
 import { Editor } from './containers/RichEditorContainer';
+import { BlogCard } from './containers/BlogCardContainer';
 import { StoreProvider, MuiThemeProvider } from './context/context';
 
 import './App.css';
@@ -19,8 +20,7 @@ const App: React.FunctionComponent<IAppProps> = ({ name }) => {
         <Paper style={{ height: '100vh' }}>
           <div className="App">
             <AppHeader />
-            <Editor />
-            <ImgUploader />
+            <BlogCard />
           </div>
         </Paper>
       </MuiThemeProvider>

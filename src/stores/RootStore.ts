@@ -4,7 +4,7 @@ import { useLocalStore } from 'mobx-react';
 import { BugStore } from './BugStore';
 import { ComplaintStore } from './ComplaintStore';
 import { ThemeStore } from './ThemeStore';
-import { EditorStateStore } from './EditorStateStore';
+import { EditorStore } from './EditorStore';
 import { ImagesStore } from './ImagesStore';
 
 export const RootStore = () => {
@@ -13,7 +13,7 @@ export const RootStore = () => {
     themeStore: useLocalStore(ThemeStore),
     imagesStore: useLocalStore(ImagesStore),
     complaintStore: useLocalStore(ComplaintStore),
-    editorStateStore: useLocalStore(EditorStateStore),
+    editorStore: useLocalStore(EditorStore),
   };
 };
 

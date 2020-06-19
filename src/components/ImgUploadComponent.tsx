@@ -26,11 +26,11 @@ registerPlugin(
 
 interface ImgUploadComponentPropsI {
   label?: string;
-  onUpdateFiles: (files: any) => void;
+  imagesUpdated: (files: any) => void;
   files: any[];
 }
 
-export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = ({ label, files, onUpdateFiles }) => {
+export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = ({ label, files, imagesUpdated }) => {
   const pondref = useRef();
 
   // default value, obtained from flepond doc
@@ -38,8 +38,8 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
 
   // PR merged, issue fixed : https://github.com/pqina/filepond-plugin-file-encode/pull/12
   // switching back to `onupdatefiles` , as it handles both add and remove conditions
-  const filesUpdated = (newFiles: any) => {
-    onUpdateFiles(newFiles);
+  const onupdatefiles = (newFiles: any) => {
+    imagesUpdated(newFiles);
   };
 
   const allDone = () => {
@@ -51,7 +51,7 @@ export const ImgUploadComponent: FunctionComponent<ImgUploadComponentPropsI> = (
       ref={pondref}
       files={files}
       allowMultiple={true}
-      onupdatefiles={filesUpdated}
+      onupdatefiles={onupdatefiles}
       acceptedFileTypes={['image/png', 'image/jpeg']}
       onprocessfiles={allDone}
       fileValidateTypeLabelExpectedTypesMap={{
