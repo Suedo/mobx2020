@@ -1,9 +1,12 @@
 import * as React from 'react';
 
-import { BugsHeader } from './containers/BugsHeaderContainer';
-import { BugsList } from './components/BugsList';
-import { BugsForm } from './components/BugsForm';
-import { bugStore, StoreContext } from './stores/Store';
+import { AppHeader } from './containers/HeaderContainer';
+import { ImgUploader } from './containers/ImgUploadContainer';
+import { Editor } from './containers/RichEditorContainer';
+import { StoreProvider, MuiThemeProvider } from './context/context';
+
+import './App.css';
+import Paper from '@material-ui/core/Paper';
 
 interface IAppProps {
   name: string;
@@ -11,14 +14,17 @@ interface IAppProps {
 
 const App: React.FunctionComponent<IAppProps> = ({ name }) => {
   return (
-    <StoreContext.Provider value={bugStore}>
-      <div className="App">
-        <header className="App-Header" />
-        <BugsHeader />
-        <BugsList />
-        <BugsForm />
-      </div>
-    </StoreContext.Provider>
+    <StoreProvider>
+      <MuiThemeProvider>
+        <Paper style={{ height: '100vh' }}>
+          <div className="App">
+            <AppHeader />
+            <Editor />
+            <ImgUploader />
+          </div>
+        </Paper>
+      </MuiThemeProvider>
+    </StoreProvider>
   );
 };
 

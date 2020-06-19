@@ -1,5 +1,6 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
+  font-family: 'Consolas', Courier, monospace;
 }
 
 .App-logo {
@@ -35,4 +36,42 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.grid-container {
+  display: grid;
+  grid: 200px 1fr/ 1fr 1fr;
+  grid-row-gap: 10px;
+  border: 2px dashed rgb(138, 174, 207);
+
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item {
+  border: 2px dotted rgb(142, 197, 117);
+}
+
+.banner {
+  grid-row: 1;
+  grid-column: 1 / span 2;
+}
+
+li {
+  list-style-type: none;
+}
+
+.header-grid-container {
+  display: grid;
+  grid: 4rem / 5rem 1fr 3rem;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 0 1rem;
+  border: 2px dashed rgb(138, 174, 207);
+}
+
+.header-grid-item {
+  border: 2px dotted rgb(142, 197, 117);
 }

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -10,11 +12,20 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "draft-js": "^0.11.6",
+    "draft-js-export-markdown": "^1.4.0",
+    "draft-js-plugins-editor": "^3.0.0",
+    "filepond": "^4.15.1",
+    "filepond-plugin-file-encode": "^2.1.6",
+    "filepond-plugin-file-validate-type": "^1.2.5",
+    "filepond-plugin-image-exif-orientation": "^1.0.9",
+    "filepond-plugin-image-preview": "^4.6.4",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "mobx-react-lite": "^2.0.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-filepond": "^7.0.1",
     "react-scripts": "3.4.1",
     "typescript": "~3.7.2"
   },
@@ -38,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/draft-js": "^0.10.40"
   }
 }
