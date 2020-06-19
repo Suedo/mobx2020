@@ -75,3 +75,8 @@ li {
 .header-grid-item {
   border: 2px dotted rgb(142, 197, 117);
 }
+
+.card-toolbar {
+  padding: 1rem;
+  margin: 0 1rem;
+}

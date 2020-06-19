@@ -19,7 +19,7 @@ const App: React.FunctionComponent<IAppProps> = ({ name }) => {
       <MuiThemeProvider>
         <Paper style={{ height: '100vh' }}>
           <div className="App">
-            <AppHeader />
+            {/* <AppHeader /> */}
             <BlogCard />
           </div>
         </Paper>

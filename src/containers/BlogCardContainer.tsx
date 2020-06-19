@@ -44,22 +44,16 @@ export const BlogCard = observer(() => {
 
   return (
     <div>
-      <div className="grid-container">
-        <div className="grid-item">
-          <RichEditor
-            placeholder="What's on your mind?"
-            editorState={editorState}
-            setEditorState={setEditorState}
-          ></RichEditor>
-        </div>
-        <div className="grid-item">
-          <ImgUploadComponent
-            imagesUpdated={(newImages) => setImages((images) => newImages)}
-            files={images}
-            label="Drag & Drop images here, or click to open file browser!"
-          ></ImgUploadComponent>
-        </div>
-      </div>
+      <RichEditor
+        placeholder="What's on your mind?"
+        editorState={editorState}
+        setEditorState={setEditorState}
+      ></RichEditor>
+      <ImgUploadComponent
+        imagesUpdated={(newImages) => setImages((images) => newImages)}
+        files={images}
+        label="Drag & Drop images here, or click to open file browser!"
+      ></ImgUploadComponent>
       <div className="card-toolbar">
         <SaveButton displayString="save" onClick={handleSave} loading={uploading}></SaveButton>
       </div>
