@@ -7,6 +7,7 @@ import { BugsForm } from './containers/BugsForm';
 import { ComplaintsForm } from './containers/ComplaintsForm';
 import { StoreProvider, MuiThemeProvider } from './context/context';
 
+import './App.css';
 import Paper from '@material-ui/core/Paper';
 
 interface IAppProps {
