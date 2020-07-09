@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BugsHeader } from './containers/BugsHeaderContainer';
 import { BugsList } from './components/BugsList';
 import { BugsForm } from './components/BugsForm';
-import { bugStore, StoreContext } from './stores/Store';
+import { StoreProvider, MuiThemeProvider } from './context/context';
 
 interface IAppProps {
   name: string;
@@ -11,14 +11,16 @@ interface IAppProps {
 
 const App: React.FunctionComponent<IAppProps> = ({ name }) => {
   return (
-    <StoreContext.Provider value={bugStore}>
-      <div className="App">
-        <header className="App-Header" />
-        <BugsHeader />
-        <BugsList />
-        <BugsForm />
-      </div>
-    </StoreContext.Provider>
+    <StoreProvider>
+      <MuiThemeProvider>
+        <div className="App">
+          <header className="App-Header" />
+          <BugsHeader />
+          <BugsList />
+          <BugsForm />
+        </div>
+      </MuiThemeProvider>
+    </StoreProvider>
   );
 };
 

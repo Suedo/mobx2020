@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useStore } from '../stores/Store';
+import { useStore } from '../context/context';
 
 export const BugsForm = () => {
-  const { addBug } = useStore((bugStore) => ({
-    addBug: bugStore.addBug,
-  }));
+  const { bugStore } = useStore();
 
   const [bug, setBug] = useState('');
 
@@ -12,7 +10,7 @@ export const BugsForm = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        addBug(bug);
+        bugStore.addBug(bug);
         setBug('');
       }}
     >

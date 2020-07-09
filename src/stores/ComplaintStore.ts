@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, computed, action } from 'mobx';
 
 export class Complaint {
   @observable id: string = Math.random.toString();
@@ -9,22 +9,19 @@ export class Complaint {
   }
 }
 
-export const ComplaintStore = () => {
-  return {
-    complaints: [new Complaint('legacy code is a pain')],
+export class ComplaintStore {
+  @observable complaints = [new Complaint('legacy code is a pain')];
 
-    get complaintByLength(): Complaint[] {
-      return this.complaints.sort((a, b) => a.name.length - b.name.length);
-    },
+  @computed get complaintByLength(): Complaint[] {
+    return this.complaints.sort((a, b) => a.name.length - b.name.length);
+  }
 
-    get complaintCount(): number {
-      return this.complaints.length;
-    },
+  @computed get complaintCount(): number {
+    return this.complaints.length;
+  }
 
-    addComplaint(name: string) {
-      this.complaints.push(new Complaint(name));
-    },
-  };
-};
-
-export type ComplaintStoreT = ReturnType<typeof ComplaintStore>;
+  @action.bound
+  addComplaint(name: string) {
+    this.complaints.push(new Complaint(name));
+  }
+}

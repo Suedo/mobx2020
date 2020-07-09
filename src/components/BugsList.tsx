@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { useStore } from '../stores/Store';
+import { useStore } from '../context/context';
 import { Observer } from 'mobx-react';
 
 interface BugsListItemProps {
@@ -12,15 +12,13 @@ const BugsListItem: FunctionComponent<BugsListItemProps> = ({ id, name }) => {
 };
 
 export const BugsList = () => {
-  const { bugs } = useStore((rootStore) => ({
-    bugs: rootStore.bugs,
-  }));
+  const { bugStore } = useStore();
 
   return (
     <Observer>
       {() => (
         <ul>
-          {bugs.map((bug) => (
+          {bugStore.bugs.map((bug) => (
             <BugsListItem id={bug.id} name={bug.name} />
           ))}
         </ul>
